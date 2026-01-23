@@ -52,5 +52,5 @@ API REST para la gestión integral de un bazar, desarrollada para administrar pr
 
 ##   🞋 Sobre el Proyecto
 
-Este desarrollo fue realizado como parte de mi formación en el curso de \*\*TodoCode Academy\*\*, aplicando estándares de calidad de software y lógica de negocio para sistemas de gestión.
+Este desarrollo fue realizado como parte de mi formación en el curso de **TodoCode Academy**, aplicando estándares de calidad de software y lógica de negocio para sistemas de gestión.
 
