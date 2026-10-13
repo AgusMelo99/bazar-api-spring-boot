@@ -1,56 +1,54 @@
-# 🛒 Bazar API - Spring Boot 
+# 🛒 Bazar API — Spring Boot
 
+API REST para gestionar un bazar: productos, clientes y ventas, con control transaccional del inventario.
 
+Proyecto desarrollado durante el curso *Desarrollo de APIs en Java con Spring Boot* (TodoCode Academy, 2025).
 
-API REST para la gestión integral de un bazar, desarrollada para administrar productos, clientes y ventas con un enfoque en la integridad de datos y el control de inventario.
+## Qué resuelve
 
+- **Stock consistente:** antes de procesar una venta se valida que haya stock; al editar una venta se reintegra el stock anterior y se descuenta el nuevo.
+- **Reportes:** ingresos y cantidad de ventas por día, y la venta de mayor monto con los datos del cliente.
 
+## Decisiones de diseño
 
-## Características Técnicas Destacadas
+- **Arquitectura en capas con DTOs:** los reportes devuelven DTOs específicos (venta de mayor monto, reporte diario) para no exponer las entidades ni la estructura de la base de datos.
+- **Persistencia:** relación venta–detalle con `@OneToMany` y `orphanRemoval = true`, para que los detalles eliminados de una venta se borren de la base automáticamente.
+- **Java Streams y lambdas** para calcular montos y filtrar datos.
 
+## Tecnologías
 
+Java 17 · Spring Boot 3 · Spring Data JPA / Hibernate · MySQL 8 · Maven
 
-***Gestión de Stock Transaccional:*** El sistema valida la disponibilidad de productos antes de procesar cada venta. Se implementó lógica de "reintegro de stock" para ediciones de ventas, garantizando la consistencia del inventario.
+## Endpoints principales
 
-***Arquitectura DTO:*** Uso de **Data Transfer Objects** para reportes específicos (Venta Mayor, Reporte Diario), protegiendo la estructura de la base de datos y optimizando las respuestas.
+| Método | Ruta | Descripción |
+|---|---|---|
+| `POST` | `/bazar/ventas/crear` | Crea una venta validando el stock |
+| `PUT` | `/bazar/ventas/edit` | Edita una venta y actualiza el inventario |
+| `GET` | `/bazar/ventas/dia/{fecha}` | Ingresos y cantidad de ventas de un día |
+| `GET` | `/bazar/ventas/mayor_venta` | Venta de mayor valor con datos del cliente |
 
-***Persistencia Avanzada:*** Uso de `@OneToMany` con `orphanRemoval = true` para una gestión limpia de registros de detalles de venta.
+<!-- TODO: agregar el resto de los endpoints (productos y clientes) y un ejemplo de body JSON para crear una venta -->
 
-***Programación Funcional:*** Implementación de **Java Streams** y **Lambdas** para cálculos de montos y filtrado de datos.
+## Cómo ejecutarlo
 
+**Requisitos:** JDK 17 y MySQL 8 corriendo en `localhost:3306`.
 
+1. Crear la base de datos:
+   ```sql
+   CREATE DATABASE bazar2;
+   ```
+2. Revisar usuario y contraseña de MySQL en `src/main/resources/application.properties`.
+3. Levantar la aplicación:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-## 🛠 Tecnologías Utilizadas
+Las tablas se crean solas al iniciar (`spring.jpa.hibernate.ddl-auto=update`). Por defecto la API queda en `http://localhost:8080`.
 
+## Próximos pasos
 
-
- * *Java 17*
-
-* *Spring Boot 3*
-
-* *Spring Data JPA*
-
-* *MySQL*
-
-* *Maven*
-
-
-
-## ⚙ Endpoints Principales
-
-
-
- `POST /bazar/ventas/crear`: Procesamiento de ventas con validación de stock.
-
-`PUT /bazar/ventas/edit`: Edición segura de ventas y actualización de inventario.
-
-`GET /bazar/ventas/dia/{fecha}`: Reporte de ingresos y cantidad de ventas diarias.
-
-`GET /bazar/ventas/mayor\_venta`: Consulta de la venta de mayor valor con datos del cliente.
-
-
-
-##   🞋 Sobre el Proyecto
-
-Este desarrollo fue realizado como parte de mi formación en el curso de **TodoCode Academy**, aplicando estándares de calidad de software y lógica de negocio para sistemas de gestión.
-
+- Tests unitarios y de integración con JUnit y Mockito.
+- Documentación de la API con OpenAPI / Swagger.
+- Credenciales de la base de datos por variables de entorno.
+- Dockerfile y `docker-compose` con MySQL.
